@@ -1,0 +1,5 @@
+PlayPodcast spiele podcast {PodcastName}
+PlayPodcast podcast spielen {PodcastName}
+PlayPodcast starte podcast {PodcastName}
+PlayPodcast podcast starten {PodcastName}
+PlayPodcast podcast {PodcastName}
