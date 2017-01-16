@@ -70,23 +70,39 @@ function alexa_slots ( $slots ) {
 	return alexa_play( $podcast_name );
 }
 
-function alexa_play( $podcast_name, $should_end_session = true  ) {
+	function alexa_play( $podcast_name, $should_end_session = true  ) {
 	$response = array(
 		'version'   => '1.0',
 		'sessionAttributes' => array(),
 		'response' => array(
+			'outputSpeech' => array(
+				'type' => 'PlainText',
+				'text' => 'Podcast wird gespielt.'
+			)
+			,
+			'card' => array(
+				'type' => 'Simple',
+				'title' => 'Spiele Podcast',
+				'content' => 'Spiele den gesuchten Podcast.'
+			),
+			'reprompt' => array(
+				'outputSpeech' => array (
+					'type' => 'PlainText',
+					'text' => null
+				)
+			),
 			'directives' => array(
 				'type' => 'AudioPlayer.Play',
-				'playBehavior' => 'REPLACE_ALL',
+				'playBehavior' => 'ENQUEUE',
 				'audioItem' => array(
 					'stream' => array(
-						'token' => md5( time() ),
+						'token' => 'we-play-the-podcast',
 						'url' => 'http://tracking.feedpress.it/link/14543/5147867/wp-sofa-29.mp3',
 						'offsetInMilliseconds' => 0
 					)
 				)
 			),
-			'shouldEndSession' => $should_end_session
+			'shouldEndSession' => true
 		)
 	);
 
