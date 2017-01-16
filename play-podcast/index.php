@@ -22,7 +22,7 @@ function alexa_response( $input ) {
 			$response = alexa_speak( "Dies ist Dein Intent Request." );
 			break;
 		default:
-			$response = alexa_speak( "Man Junge was willst Du?" );
+			$response = alexa_speak( "Wenn ich jetzt noch verstanden hättest was Du willst. Versuchs noch einmal!" );
 			break;
 	}
 
