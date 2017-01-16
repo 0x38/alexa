@@ -70,7 +70,7 @@ function alexa_slots ( $slots ) {
 	return alexa_play( $podcast_name );
 }
 
-	function alexa_play( $podcast_name, $should_end_session = true  ) {
+function alexa_play( $podcast_name, $should_end_session = true  ) {
 	$response = array(
 		'version'   => '1.0',
 		'sessionAttributes' => array(),
