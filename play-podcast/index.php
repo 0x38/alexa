@@ -19,7 +19,14 @@ function alexa_response( $input ) {
 			$response = alexa_speak( "Ende des Universums." );
 			break;
 		case "IntentRequest":
-			$response = alexa_speak( "Dies ist Dein Intent Request." );
+			$response = alexa_intent( $input->request->intent );
+
+			$file = fopen( 'alexa-response.txt', 'a');
+			fputs( $file, print_r( $input, true ) );
+			fputs( $file, print_r( $response, true ) );
+			fputs( $file, print_r( json_encode( $response ), true ) );
+			fclose( $file );
+
 			break;
 		default:
 			$response = alexa_speak( "Wenn ich jetzt noch verstanden hättest was Du willst. Versuchs noch einmal!" );
@@ -37,6 +44,47 @@ function alexa_speak( $text, $session_attributes = array(), $should_end_session 
 			'outputSpeech' => array(
 				'type'  => 'PlainText',
 				'text'  => $text
+			),
+			'shouldEndSession' => $should_end_session
+		)
+	);
+
+	return $response;
+}
+
+function alexa_intent( $intent ){
+	switch( $intent->name ) {
+		case 'PlayPodcast':
+			return alexa_slots( $intent->slots );
+			break;
+		default:
+			return alexa_speak( "Ich weis nicht was ich machen soll. Versuche es noch einmal.");
+			break;
+	}
+}
+
+function alexa_slots ( $slots ) {
+	$podcast_name = $slots->PodcastName->value;
+	sprintf( 'Ich spiele jetzt den Podcast %s', $podcast_name );
+
+	return alexa_play( $podcast_name );
+}
+
+function alexa_play( $podcast_name, $should_end_session = true  ) {
+	$response = array(
+		'version'   => '1.0',
+		'sessionAttributes' => array(),
+		'response' => array(
+			'directives' => array(
+				'type' => 'AudioPlayer.Play',
+				'playBehavior' => 'REPLACE_ALL',
+				'audioItem' => array(
+					'stream' => array(
+						'token' => md5( time() ),
+						'url' => 'http://tracking.feedpress.it/link/14543/5147867/wp-sofa-29.mp3',
+						'offsetInMilliseconds' => 0
+					)
+				)
 			),
 			'shouldEndSession' => $should_end_session
 		)
