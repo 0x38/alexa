@@ -1,5 +1,21 @@
-PlayPodcast spiele podcast {PodcastName}
-PlayPodcast podcast spielen {PodcastName}
-PlayPodcast starte podcast {PodcastName}
-PlayPodcast podcast starten {PodcastName}
-PlayPodcast podcast {PodcastName}
+PlayPodcast spiele {PodcastName}
+PlayPodcast spielen {PodcastName}
+PlayPodcast abspielen {PodcastName}
+PlayPodcast starte {PodcastName}
+PlayPodcast starten {PodcastName}
+PlayPodcast finde {PodcastName}
+PlayPodcast finden {PodcastName}
+PlayPodcast spiele {PodcastName} Nummer {PodcastNumber}
+PlayPodcast spielen {PodcastName} Nummer {PodcastNumber}
+PlayPodcast abspielen {PodcastName} Nummer {PodcastNumber}
+PlayPodcast starte {PodcastName} Nummer {PodcastNumber}
+PlayPodcast starten {PodcastName} Nummer {PodcastNumber}
+PlayPodcast finde {PodcastName} Nummer {PodcastNumber}
+PlayPodcast finden {PodcastName} Nummer {PodcastNumber}
+PlayPodcast spiele {PodcastName} Folge {PodcastNumber}
+PlayPodcast spielen {PodcastName} Folge {PodcastNumber}
+PlayPodcast abspielen {PodcastName} Folge {PodcastNumber}
+PlayPodcast starte {PodcastName} Folge {PodcastNumber}
+PlayPodcast starten {PodcastName} Folge {PodcastNumber}
+PlayPodcast finde {PodcastName} Folge {PodcastNumber}
+PlayPodcast finden {PodcastName} Folge {PodcastNumber}

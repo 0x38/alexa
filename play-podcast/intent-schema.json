@@ -1,12 +1,21 @@
 {
-  "intents":
-  [
+  "intents": [
+    {
+      "intent": "AMAZON.ResumeIntent"
+    },
+    {
+      "intent": "AMAZON.PauseIntent"
+    },
     {
       "intent": "PlayPodcast",
-      "slots" : [
+      "slots": [
         {
-          "name" : "PodcastName",
-          "type" : "POTCAST_NAME"
+          "name": "PodcastName",
+          "type": "POTCAST_NAME"
+        },
+        {
+          "name": "PodcastNumber",
+          "type": "AMAZON.NUMBER"
         }
       ]
     }
