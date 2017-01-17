@@ -63,12 +63,18 @@ function alexa_slots ( $slots ) {
 	$podcast_number = 1;
 
 	if( property_exists( $slots, 'PodcastNumber' ) ) {
-		$podcast_number = (int) $slots->PodcastNumber->value;
+		if( property_exists( $slots->PodcastNumber, 'value' ) ) {
+			$podcast_number = (int) $slots->PodcastNumber->value;
+		}
 	}
 	return alexa_play( $podcast_name, $podcast_number );
 }
 
 function alexa_play( $podcast_name, $podcast_number = 1, $session_attributes = array(), $should_end_session = true  ) {
+	$output_speech = 'Starte Podcast ' . $podcast_name .' Nummer ' . $podcast_number;
+	logger ( date( 'd.m.Y H:i:s', time() ) );
+	logger ( $output_speech );
+
 	$episodes = search_itunes_podcast( $podcast_name );
 
 	$directives = array();
@@ -98,7 +104,7 @@ function alexa_play( $podcast_name, $podcast_number = 1, $session_attributes = a
 		'response' => array(
 			'outputSpeech' => array(
 				'type'  => 'PlainText',
-				'text'  => 'Starte Podcast ' . $podcast_name
+				'text'  => $output_speech
 			),
 			'directives' => $directives,
 			'shouldEndSession' => $should_end_session
@@ -133,15 +139,9 @@ function parse_rss_feed( $feed_url ) {
 	$feed = array();
 	foreach ( $rss->getElementsByTagName( 'item' ) as $node ) {
 		$url = str_replace( 'http://', 'https://', $node->getElementsByTagName( 'enclosure' )->item(0)->getAttribute( 'url' ) );
+		logger( $url );
 
 		$item = array (
-			/*
-			'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
-			'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
-			'guid' => $node->getElementsByTagName('guid')->item(0)->nodeValue,
-			'enclosure' => $node->getElementsByTagName('enclosure')->item(0)->nodeValue,
-			'image' => $node->getElementsByTagName( 'image' )->item(0)->getAttribute( 'href' ),
-			*/
 			'url' => $url
 		);
 
@@ -154,6 +154,6 @@ function parse_rss_feed( $feed_url ) {
 
 function logger( $value ) {
 	$file = fopen( 'log.txt', 'a' );
-	fputs( $file, print_r( $value, true ) );
+	fputs( $file, print_r( $value, true ) . chr( 13 ) );
 	fclose( $file );
 }
