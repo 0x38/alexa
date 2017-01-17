@@ -1,5 +1,8 @@
 <?php
 
+include( dirname( __FILE__ ) . '/includes/Requests.php');
+Requests::register_autoloader();
+
 $input = json_decode( file_get_contents( 'php://input' ) );
 $output = alexa_response( $input );
 $size = strlen ( $output );
@@ -9,6 +12,7 @@ header("Content-length: $size");
 
 echo $output;
 
+logger( $output );
 
 function alexa_response( $input ) {
 	switch ( $input->request->type ) {
@@ -20,20 +24,15 @@ function alexa_response( $input ) {
 			break;
 		case "IntentRequest":
 			$response = alexa_intent( $input->request->intent );
-
-			$file = fopen( 'alexa-response.txt', 'a');
-			fputs( $file, print_r( $input, true ) );
-			fputs( $file, print_r( $response, true ) );
-			fputs( $file, print_r( json_encode( $response ), true ) );
-			fclose( $file );
-
 			break;
 		default:
 			$response = alexa_speak( "Wenn ich jetzt noch verstanden hättest was Du willst. Versuchs noch einmal!" );
 			break;
 	}
 
-	return json_encode( $response );
+	logger( $response );
+
+	return json_encode( $response, JSON_UNESCAPED_SLASHES );
 }
 
 function alexa_speak( $text, $session_attributes = array(), $should_end_session = true ) {
@@ -65,46 +64,94 @@ function alexa_intent( $intent ){
 
 function alexa_slots ( $slots ) {
 	$podcast_name = $slots->PodcastName->value;
-	sprintf( 'Ich spiele jetzt den Podcast %s', $podcast_name );
-
 	return alexa_play( $podcast_name );
 }
 
-function alexa_play( $podcast_name, $should_end_session = true  ) {
+function alexa_play( $podcast_name, $session_attributes = array(), $should_end_session = true  ) {
+	$episodes = search_itunes_podcast( $podcast_name );
+
+	$directives = array();
+	$i = 1;
+	foreach( $episodes AS $episode ) {
+		$play_behaviour = 'ENQUEUE';
+		if( $i == 1 ) {
+			break;
+		}
+
+		$directives[] = array(
+			'type' => 'AudioPlayer.Play',
+			'playBehavior' => 'REPLACE_ALL',
+			'audioItem' => array(
+				'stream' => array(
+					'token' => 'podcast-' . $i,
+					'url' => $episode['url'],
+					'offsetInMilliseconds' => 0
+				)
+			)
+		);
+
+		$i++;
+	}
+
 	$response = array(
-		'version'   => '1.0',
-		'sessionAttributes' => array(),
+		'version' => '1.0',
+		'sessionAttributes' => $session_attributes,
 		'response' => array(
 			'outputSpeech' => array(
-				'type' => 'PlainText',
-				'text' => 'Podcast wird gespielt.'
-			)
-			,
-			'card' => array(
-				'type' => 'Simple',
-				'title' => 'Spiele Podcast',
-				'content' => 'Spiele den gesuchten Podcast.'
+				'type'  => 'PlainText',
+				'text'  => 'Starte Podcast ' . $podcast_name
 			),
-			'reprompt' => array(
-				'outputSpeech' => array (
-					'type' => 'PlainText',
-					'text' => null
-				)
-			),
-			'directives' => array(
-				'type' => 'AudioPlayer.Play',
-				'playBehavior' => 'ENQUEUE',
-				'audioItem' => array(
-					'stream' => array(
-						'token' => 'we-play-the-podcast',
-						'url' => 'http://tracking.feedpress.it/link/14543/5147867/wp-sofa-29.mp3',
-						'offsetInMilliseconds' => 0
-					)
-				)
-			),
-			'shouldEndSession' => true
+			'directives' => $directives,
+			'shouldEndSession' => $should_end_session
 		)
 	);
 
 	return $response;
+}
+
+function search_itunes_podcast( $string ) {
+	$url = 'https://itunes.apple.com/search?term=' . $string . '&entity=podcast&country=de&media=podcast';
+
+	$request = Requests::get( $url, array('Accept' => 'application/json') );
+	$body = json_decode( $request->body );
+
+	if( 0 === $body->resultCount ) {
+		return false;
+	}
+
+	$podcasts = array();
+	foreach ( $body->results AS $result ) {
+		$podcasts = array_merge( $podcasts, parse_rss_feed( $result->feedUrl) );
+	}
+
+	return $podcasts;
+}
+
+function parse_rss_feed( $feed_url ) {
+	$rss = new DOMDocument();
+	$rss->load( $feed_url );
+
+	$feed = array();
+	foreach ( $rss->getElementsByTagName( 'item' ) as $node ) {
+		$url = str_replace( 'http://', 'https://', $node->getElementsByTagName( 'enclosure' )->item(0)->getAttribute( 'url' ) );
+
+		$item = array (
+			'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+			'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
+			'guid' => $node->getElementsByTagName('guid')->item(0)->nodeValue,
+			'enclosure' => $node->getElementsByTagName('enclosure')->item(0)->nodeValue,
+			'image' => $node->getElementsByTagName( 'image' )->item(0)->getAttribute( 'href' ),
+			'url' => $url
+		);
+		array_push( $feed, $item );
+	}
+
+	return $feed;
+}
+
+
+function logger( $value ) {
+	$file = fopen( 'log.txt', 'a' );
+	fputs( $file, print_r( $value, true ) );
+	fclose( $file );
 }
