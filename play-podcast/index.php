@@ -10,6 +10,8 @@ $size = strlen ( $output );
 header('Content-Type: application/json');
 header("Content-length: $size");
 
+// logger ( $input );
+
 echo $output;
 
 function alexa_response( $input ) {
@@ -72,8 +74,6 @@ function alexa_slots ( $slots ) {
 
 function alexa_play( $podcast_name, $podcast_number = 1, $session_attributes = array(), $should_end_session = true  ) {
 	$output_speech = 'Starte Podcast ' . $podcast_name .' Nummer ' . $podcast_number;
-	logger ( date( 'd.m.Y H:i:s', time() ) );
-	logger ( $output_speech );
 
 	$episodes = search_itunes_podcast( $podcast_name );
 
@@ -81,18 +81,27 @@ function alexa_play( $podcast_name, $podcast_number = 1, $session_attributes = a
 	$i = 1;
 	foreach( $episodes AS $episode ) {
 		if( $i == $podcast_number ) {
+			$url = $episode['url'];
+
+			if( ! strpos( $url, 'htts://' ) ) {
+				file_put_contents( basename ( $url ), fopen( $url, 'r' ) );
+				$url = 'https://alexa.g5k.de/play-podcast/' . basename( $url );
+				logger ( date( 'Y-m-d H:i:s', time() ) . ' - Copy Podcast - ' . $url );
+			}
+
 			$directives[] = array(
 				'type' => 'AudioPlayer.Play',
 				'playBehavior' => 'REPLACE_ALL',
 				'audioItem' => array(
 					'stream' => array(
 						'token' => 'podcast-universe-podcast',
-						'url' => $episode['url'],
+						'url' => $url,
 						'offsetInMilliseconds' => 0
 					)
 				)
 			);
 
+			logger ( date( 'Y-m-d H:i:s', time() ) . ' - ' . $output_speech . ' - ' . $episode['url'] );
 			break;
 		}
 		$i++;
@@ -138,10 +147,16 @@ function parse_rss_feed( $feed_url ) {
 
 	$feed = array();
 	foreach ( $rss->getElementsByTagName( 'item' ) as $node ) {
-		$url = str_replace( 'http://', 'https://', $node->getElementsByTagName( 'enclosure' )->item(0)->getAttribute( 'url' ) );
-		logger( $url );
+		$url = $node->getElementsByTagName( 'enclosure' )->item(0)->getAttribute( 'url' );
 
 		$item = array (
+			/*
+			'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+			'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
+			'guid' => $node->getElementsByTagName('guid')->item(0)->nodeValue,
+			'enclosure' => $node->getElementsByTagName('enclosure')->item(0)->nodeValue,
+			'image' => $node->getElementsByTagName( 'image' )->item(0)->getAttribute( 'href' ),
+			*/
 			'url' => $url
 		);
 
