@@ -1,6 +1,6 @@
 <?php
 
-include( dirname( __FILE__ ) . '/includes/Requests.php');
+include( dirname( dirname( __FILE__ ) ) . '/includes/Requests.php');
 Requests::register_autoloader();
 
 $input = json_decode( file_get_contents( 'php://input' ) );

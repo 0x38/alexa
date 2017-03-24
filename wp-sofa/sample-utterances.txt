@@ -1,0 +1,19 @@
+PlayPodcast spiele
+PlayPodcast spielen
+PlayPodcast abspielen
+PlayPodcast starte
+PlayPodcast starten
+PlayPodcast spiele Nummer {PodcastNumber}
+PlayPodcast spielen Nummer {PodcastNumber}
+PlayPodcast abspielen Nummer {PodcastNumber}
+PlayPodcast starte Nummer {PodcastNumber}
+PlayPodcast starten Nummer {PodcastNumber}
+PlayPodcast finde Nummer {PodcastNumber}
+PlayPodcast finden Nummer {PodcastNumber}
+PlayPodcast spiele Folge {PodcastNumber}
+PlayPodcast spielen Folge {PodcastNumber}
+PlayPodcast abspielen Folge {PodcastNumber}
+PlayPodcast starte Folge {PodcastNumber}
+PlayPodcast starten Folge {PodcastNumber}
+PlayPodcast finde Folge {PodcastNumber}
+PlayPodcast finden Folge {PodcastNumber}
