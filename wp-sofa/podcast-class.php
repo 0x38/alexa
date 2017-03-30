@@ -13,10 +13,10 @@ class Podcast extends \Alexa_Podcast\Alexa_Podcast {
 
 		$this->app_id = 'amzn1.ask.skill.fa771ea4-38ac-4030-81d7-77c5c61d4f76';
 
-		$this->text_launch = 'Auch ich setze mich aufs WP Sofa und höre mit Dir! Welche Folge soll ich abspielen?';
-		$this->text_end = 'Ach mensch hier ist doch so gemütlich! Naja, dann geh doch!';
-		$this->text_dont_understood = 'Man man man, Du musst schon deutlicher sprechen';
-		$this->text_starting_podcast = 'Dann gibts jetzt Folge %d auf die Ohren!';
+		$this->text_launch = 'Cool! Datt WP Sofa iss immer noch datt schönste! Welche Folge willste hören?';
+		$this->text_end = 'Ach mensch hier iss doch so jemütlich! Naja, dann geh doch!';
+		$this->text_dont_understood = 'Man man man, Du muss schon deutlicher sprechen';
+		$this->text_starting_podcast = 'Dann gibts jetz Folge %d auf die Lauscher!';
 
 		$this->revert_episode_numbers();
 	}
