@@ -16,6 +16,10 @@ abstract class Alexa {
 
 	protected $app_id;
 
+	protected $session_id;
+
+	protected $user_id;
+
 	protected $text_launch = 'Hello! I am an Alexa Skill.';
 
 	protected $text_end = 'Good bye!';
@@ -23,7 +27,7 @@ abstract class Alexa {
 	protected $text_dont_understood = 'I did not understood you.';
 
 	public function __construct() {
-		$this->delete_logfile();
+		// $this->delete_logfile();
 		\Requests::register_autoloader();
 	}
 
@@ -38,6 +42,13 @@ abstract class Alexa {
 
 		$this->log( $this->input );
 
+		if( $this->input->session->application->applicationId !== $this->app_id ) {
+			throw new Alexa_Exception( 'Wrong Application ID' );
+		}
+
+		$this->session_id = $this->input->session->sessionId;
+		$this->user_id = $this->input->session->user->userId;
+
 		$this->request_type = $this->input->request->type;
 		return $this->input->request;
 	}
@@ -45,16 +56,16 @@ abstract class Alexa {
 	public function answer() {
 		switch ( $this->request_type ) {
 			case "LaunchRequest":
-				$response = $this->speak( $this->text_launch );
+				$response = $this->launch();
 				break;
 			case "SessionEndedRequest":
-				$response = $this->speak( $this->text_end );
+				$response = $this->end();
 				break;
 			case "IntentRequest":
 				$response = $this->interact( $this->input->request->intent );
 				break;
 			default:
-				$response = $this->speak( $this->text_dont_understood );
+				$response = $this->dont_understood();
 				break;
 		}
 
@@ -62,12 +73,22 @@ abstract class Alexa {
 
 		$size = strlen ( $response );
 
-		$this->log( $response );
-
 		header( 'Content-Type: application/json' );
 		header( 'Content-length: ' . $size );
 
 		return $response;
+	}
+
+	public function launch() {
+		return $this->speak( $this->text_launch );
+	}
+
+	public function end() {
+		return $this->speak( $this->text_end );
+	}
+
+	public function dont_understood() {
+		return $this->speak( $this->text_dont_understood );
 	}
 
 	abstract public function interact( $intent );
