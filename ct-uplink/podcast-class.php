@@ -17,7 +17,5 @@ class Podcast extends \Alexa_Podcast\Alexa_Podcast {
 		$this->text_end = 'Einen schönen Tag noch!';
 		$this->text_dont_understood = 'Ich habe Dich leider nicht verstanden';
 		$this->text_starting_podcast = 'Spiele Folge %d';
-
-		// $this->revert_episode_numbers();
 	}
 }
