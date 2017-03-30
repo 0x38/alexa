@@ -1,10 +1,10 @@
 <?php
 
-namespace WP_Sofa;
+namespace Podcast;
 
 require_once dirname( dirname( __FILE__ ) ) . '/includes/php/alexa-podcast/alexa-podcast-class.php';
 
-class WP_Sofa_Pocast extends \Alexa_Podcast\Alexa_Podcast {
+class Podcast extends \Alexa_Podcast\Alexa_Podcast {
 
 	public function __construct() {
 		$this->podcast_feed_url = 'https://m4a.wp-sofa.de/';

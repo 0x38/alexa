@@ -27,7 +27,6 @@ abstract class Alexa {
 	protected $text_dont_understood = 'I did not understood you.';
 
 	public function __construct() {
-		$this->delete_logfile();
 		\Requests::register_autoloader();
 	}
 
@@ -43,8 +42,6 @@ abstract class Alexa {
 		if( $this->input->session->application->applicationId !== $this->app_id ) {
 			throw new Alexa_Exception( 'Wrong Application ID' );
 		}
-
-		$this->log( $this->input );
 
 		$this->session_id = $this->input->session->sessionId;
 		$this->user_id = $this->input->session->user->userId;
@@ -68,8 +65,6 @@ abstract class Alexa {
 				$response = $this->dont_understood();
 				break;
 		}
-
-		$this->log( $response );
 
 		$response = json_encode( $response );
 

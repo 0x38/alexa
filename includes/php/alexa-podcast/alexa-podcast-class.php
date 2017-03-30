@@ -58,7 +58,7 @@ abstract class Alexa_Podcast extends Alexa {
 
 			$episode_url = $this->get_episode_url( $episode_number );
 
-			$this->log( $episode_url );
+			$this->log( 'Playing URL: ' . $episode_url );
 
 			$directives[] = array(
 				'type' => 'AudioPlayer.Play',
@@ -114,7 +114,7 @@ abstract class Alexa_Podcast extends Alexa {
 		}
 
 		$rss = new \DOMDocument();
-		$rss->load( $this->podcast_feed_url );
+		$rss->load( $this->podcast_feed_url, LIBXML_NOWARNING );
 
 		$feed = array();
 		foreach ( $rss->getElementsByTagName( 'item' ) as $node ) {
