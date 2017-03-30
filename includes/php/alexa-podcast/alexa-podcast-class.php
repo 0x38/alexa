@@ -13,6 +13,23 @@ abstract class Alexa_Podcast extends Alexa {
 
 	protected $text_starting_podcast = 'Playing Podcast episode %d';
 
+	protected $episodes;
+
+	protected $total_episodes;
+
+	protected $current_episode;
+
+	public function __construct() {
+		parent::__construct();
+
+		$this->episodes = $this->get_episodes();
+		$this->total_episodes = count( $this->episodes );
+	}
+
+	protected function revert_episode_numbers() {
+		$this->episodes = array_reverse( $this->episodes );
+	}
+
 	public function interact( $intent ) {
 		switch( $intent->name ) {
 			case 'PlayPodcast':
@@ -21,8 +38,8 @@ abstract class Alexa_Podcast extends Alexa {
 				if( property_exists( $intent, 'slots' ) ) {
 					if( property_exists( $intent->slots, 'PodcastNumber' ) ) {
 						if ( property_exists( $intent->slots->PodcastNumber, 'value' ) ) {
-							$episode = $intent->slots->PodcastNumber->value;
-							$response = $this->play_podcast( $episode );
+							$episode_number = $intent->slots->PodcastNumber->value;
+							$response = $this->play_podcast( $episode_number );
 						}
 					}
 				}
@@ -32,14 +49,15 @@ abstract class Alexa_Podcast extends Alexa {
 				$response = $this->dont_understood();
 		}
 
-		$this->log( $response );
-
 		return $response;
 	}
 
-	public function play_podcast( $episode, $session_attributes = array(), $should_end_session = true ) {
+	public function play_podcast( $episode_number, $session_attributes = array(), $should_end_session = true ) {
 		try{
-			$episode_url = $this->get_episode_url( $episode );
+			$this->current_episode = $episode_number;
+
+			$episode_url = $this->get_episode_url( $episode_number );
+
 			$this->log( $episode_url );
 
 			$directives[] = array(
@@ -60,7 +78,7 @@ abstract class Alexa_Podcast extends Alexa {
 				'response' => array(
 					'outputSpeech' => array(
 						'type'  => 'PlainText',
-						'text'  => $output_speech
+						'text'  => sprintf( $this->text_starting_podcast, $episode_number )
 					),
 					'directives' => $directives,
 					'shouldEndSession' => $should_end_session
@@ -70,18 +88,13 @@ abstract class Alexa_Podcast extends Alexa {
 			return $response;
 
 		} catch ( Alexa_Exception $exception ) {
-			$this->log( $exception->getMessage() );
 			return $this->dont_understood();
 		}
 	}
 
 	protected function get_episode_url( $episode_number ) {
-		$episodes = $this->get_episodes();
-
-		$this->log( $episodes );
-
 		$i = 1;
-		foreach( $episodes AS $episode ) {
+		foreach( $this->episodes AS $episode ) {
 			if( $i == $episode_number ) {
 				return $episode['url'];
 			}
@@ -95,9 +108,7 @@ abstract class Alexa_Podcast extends Alexa {
 		return $this->speak( $this->text_launch, array(), false );
 	}
 
-	private function get_episodes() {
-		$this->log( $this->podcast_feed_url );
-
+	protected function get_episodes() {
 		if( empty( $this->podcast_feed_url ) ) {
 			throw new Alexa_Exception( 'Podcast Feed URL is empty', 'podcast_feed_url_empty' );
 		}
