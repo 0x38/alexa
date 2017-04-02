@@ -2,5 +2,5 @@
 
 namespace Alexa;
 
-class Alexa_Exception extends \Exception {
+class Exception extends \Exception {
 }

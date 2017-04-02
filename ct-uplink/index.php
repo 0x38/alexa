@@ -7,7 +7,7 @@
  */
 
 namespace Podcast;
-use Alexa\Alexa_Exception;
+use Alexa\Exception;
 
 require_once dirname( __FILE__ ) . '/podcast-class.php';
 
@@ -16,6 +16,6 @@ try {
 
 	$podcast->listen();
 	echo $podcast->answer();
-} catch ( Alexa_Exception $exception ) {
+} catch ( Exception $exception ) {
 	echo $exception->getMessage();
 }

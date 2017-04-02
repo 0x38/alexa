@@ -2,9 +2,9 @@
 
 namespace Alexa_Podcast;
 use Alexa\Alexa;
-use Alexa\Alexa_Exception;
+use Alexa\Exception;
 
-require_once dirname( dirname( __FILE__ ) ) . '/alexa-sdk/alexa-class.php';
+require_once dirname( dirname( __FILE__ ) ) . '/alexa-sdk/controller-class.php';
 
 abstract class Alexa_Podcast extends Alexa {
 	protected $podcast_name;
@@ -87,7 +87,7 @@ abstract class Alexa_Podcast extends Alexa {
 
 			return $response;
 
-		} catch ( Alexa_Exception $exception ) {
+		} catch ( Exception $exception ) {
 			return $this->dont_understood();
 		}
 	}
@@ -110,7 +110,7 @@ abstract class Alexa_Podcast extends Alexa {
 
 	protected function get_episodes() {
 		if( empty( $this->podcast_feed_url ) ) {
-			throw new Alexa_Exception( 'Podcast Feed URL is empty', 'podcast_feed_url_empty' );
+			throw new Exception( 'Podcast Feed URL is empty', 'podcast_feed_url_empty' );
 		}
 
 		$rss = new \DOMDocument();
