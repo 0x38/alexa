@@ -104,8 +104,10 @@ abstract class Skill {
 	public function request() {
 		$this->request = new Request( $this->input() );
 
+		$this->log( $this->request );
+
 		if( ! $this->request->session()->application()->id_equals( $this->application_id ) ) {
-			//throw new Exception( 'Wrong Application ID' );
+			throw new Exception( 'Wrong Application ID' );
 		}
 
 		return $this->request;
@@ -121,8 +123,6 @@ abstract class Skill {
 	 * @return array $response
 	 */
 	public function response( $echo = true ) {
-		$this->log( $this->request()->get_type() );
-
 		switch ( $this->request->get_type() ) {
 			case "LaunchRequest":
 				$response = $this->response_launch();
@@ -137,6 +137,8 @@ abstract class Skill {
 				$response = $this->response_dont_understood();
 				break;
 		}
+
+		$this->log( $response );
 
 		if( $echo ) {
 			$this->output( $response );

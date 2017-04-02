@@ -27,7 +27,7 @@ class Application {
 	 * @param \stdClass $application_data Application from Alexa JSON String
 	 */
 	public function __construct( \stdClass $application_data ) {
-		$this->application_id = $application_data->applicationID;
+		$this->application_id = $application_data->applicationId;
 	}
 
 	/**

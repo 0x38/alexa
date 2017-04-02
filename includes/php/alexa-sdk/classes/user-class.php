@@ -11,13 +11,22 @@ namespace Alexa;
  */
 class User {
 	/**
+	 * User ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private $user_id;
+
+	/**
 	 * User constructor.
 	 *
-	 * @param \stdClass $session_data Session from Alexa JSON String
+	 * @param \stdClass $user_data Session from Alexa JSON String
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct( \stdClass $user_data ) {
-		$this->type = $user_data->type;
+		$this->user_id = $user_data->userId;
 	}
 }

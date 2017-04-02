@@ -10,14 +10,24 @@ namespace Alexa;
  * @package Alexa
  */
 class Request {
+	use Logger;
 	/**
 	 * Session Data
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var Session
+	 * @var string
 	 */
 	protected $type;
+
+	/**
+	 * Version
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $version;
 
 	/**
 	 * Session Data
@@ -36,7 +46,10 @@ class Request {
 	 * @param \stdClass $input_data Input from Alexa JSON String
 	 */
 	public function __construct( \stdClass $input_data ) {
+		$this->log( $input_data );
+
 		$this->type = $input_data->request->type;
+		$this->version = $input_data->version;
 
 		$this->session = new Session( $input_data->session );
 	}
@@ -49,7 +62,7 @@ class Request {
 	 * @return Session $session
 	 */
 	public function get_version() {
-		return $this->type;
+		return $this->version;
 	}
 
 	/**
@@ -64,7 +77,7 @@ class Request {
 	}
 
 	/**
-	 * Get or set Session
+	 * Get Session
 	 *
 	 * @since 1.0.0
 	 *
