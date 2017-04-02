@@ -2,7 +2,7 @@
 
 namespace Alexa;
 
-require_once dirname(  dirname( __FILE__ )  ) . '/Requests.php';
+require_once dirname( dirname( __FILE__ ) ) . '/Requests.php';
 
 require_once dirname( __FILE__ ) . '/exception-class.php';
 require_once dirname( __FILE__ ) . '/logger-trait.php';
