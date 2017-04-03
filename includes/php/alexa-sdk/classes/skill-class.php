@@ -79,7 +79,6 @@ abstract class Skill {
 	 */
 	public function __construct( $application_id ) {
 		$this->application_id = $application_id;
-		$this->log( $application_id );
 	}
 
 	/**
@@ -206,7 +205,7 @@ abstract class Skill {
 		return $this->response_speak( $this->text_dont_understood );
 	}
 
-	abstract public function interact( $intent );
+	abstract protected function interact( $intent );
 
 	public function response_speak( $text, $session_attributes = array(), $should_end_session = true ) {
 		$response = array(

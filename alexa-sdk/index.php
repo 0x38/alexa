@@ -31,14 +31,43 @@ use Alexa\Skill;
 use Alexa\Logger;
 
 class My_Skill extends Skill {
-	protected $text_launch = 'Geh sterben!';
-	public function interact( $intent ) {
+	public function __construct( $application_id ) {
+		$this->text_launch = $this->rand_text();
+
+		parent::__construct( $application_id );
+	}
+
+	private function rand_text() {
+		$text = array(
+			'Geh sterben',
+			'Helene Fischer, die singende Sagrotanflasche? Vergiss es!',
+			'Ich bin doch nicht blöd!',
+			'Du Vollpfosten!',
+			'Du hast doch einen an der Matte!',
+			'Willst Du einen Flug Buchen zum Ballermann? Da spielen die so einen Schrott!',
+			'Mir wird schlecht...',
+			'Leidest Du unter Geschmacksverkalkung?',
+			'Atemlos, Durch die Nacht... Das reicht...',
+			'Der Selbstzerstörungsmodus wurde aktiviert. 10, 9, 8, 7, 6, 5, 4, 3, 2, 1... Boom!',
+			'Ich kann nichts trinken und ohne Alkohol tu ich mir das nicht an!',
+			'Ich kann diese Bratze nicht ausstehen!',
+			'Hast Du Lack gesoffen?',
+			'Guck mal da, ein Eichhörnchen!'
+		);
+
+		$array_key = array_rand( $text, 1 );
+
+		return $text[ $array_key ];
+	}
+
+	protected function interact( $intent ) {
 		return $this->response_speak( 'Geh sterben!' );
 	}
 }
 
 try {
 	$skill = new My_Skill( 'amzn1.ask.skill.f66f9cb9-c632-42bb-be50-210f1d6164b6' );
+	$skill->request()->intent()->get_slots();
 	$skill->run();
 } catch ( Exception $exception ) {
 	echo $exception->getMessage();

@@ -11,6 +11,7 @@ namespace Alexa;
  */
 class Request {
 	use Logger;
+
 	/**
 	 * Session Data
 	 *
@@ -19,6 +20,33 @@ class Request {
 	 * @var string
 	 */
 	protected $type;
+
+	/**
+	 * Request ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $request_id;
+
+	/**
+	 * Locale
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $locale;
+
+	/**
+	 * Timestamp
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $timestamp;
 
 	/**
 	 * Version
@@ -39,6 +67,15 @@ class Request {
 	protected $session;
 
 	/**
+	 * Intent Data
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var Intent
+	 */
+	protected $intent;
+
+	/**
 	 * Request constructor.
 	 *
 	 * @since 1.0.0
@@ -48,10 +85,17 @@ class Request {
 	public function __construct( \stdClass $input_data ) {
 		$this->log( $input_data );
 
+		$this->request_id = $input_data->request->requestId;
 		$this->type = $input_data->request->type;
+		$this->locale = $input_data->request->locale;
+		$this->timestamp = $input_data->request->timestamp;
 		$this->version = $input_data->version;
 
 		$this->session = new Session( $input_data->session );
+
+		if( 'IntentRequest' === $this->type ) {
+			$this->intent = new Intent( $input_data->request->intent );
+		}
 	}
 
 	/**
@@ -85,5 +129,16 @@ class Request {
 	 */
 	public function session() {
 		return $this->session;
+	}
+
+	/**
+	 * Get intent
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Intent $intent
+	 */
+	public function intent() {
+		return $this->intent;
 	}
 }

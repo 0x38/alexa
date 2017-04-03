@@ -11,6 +11,15 @@ namespace Alexa;
  */
 class Session {
 	/**
+	 * Is Session new
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var bool
+	 */
+	private $new;
+
+	/**
 	 * Session ID
 	 *
 	 * @since 1.0.0
@@ -29,6 +38,15 @@ class Session {
 	private $user;
 
 	/**
+	 * Attributes Object
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var Attributes
+	 */
+	private $attributes;
+
+	/**
 	 * Application Object
 	 *
 	 * @since 1.0.0
@@ -45,6 +63,7 @@ class Session {
 	 * @param \stdClass $session_data Session from Alexa JSON String
 	 */
 	public function __construct( \stdClass $session_data ) {
+		$this->new = $session_data->new;
 		$this->session_id = $session_data->sessionId;
 
 		$this->user = new User( $session_data->user );
@@ -71,5 +90,16 @@ class Session {
 	 */
 	public function user() {
 		return $this->user;
+	}
+
+	/**
+	 * Getting Session ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string $session_id
+	 */
+	public function get_session_id() {
+		return $this->session_id;
 	}
 }
