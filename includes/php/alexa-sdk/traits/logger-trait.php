@@ -64,7 +64,7 @@ trait Logger {
 	 *
 	 * @return int|bool $written
 	 */
-	protected function log( $value ) {
+	public function log( $value ) {
 		$content = '';
 		if( $this->log_date ) {
 			$content .= date( $this->log_dateformat, time() ) . ';' ;

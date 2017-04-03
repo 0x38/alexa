@@ -37,7 +37,7 @@ class Intent {
 	 */
 	public function __construct( \stdClass $intent_data ) {
 		$this->name = $intent_data->name;
-		$this->slots = $intent_data->slots;
+		$this->slots = get_object_vars( $intent_data->slots );
 	}
 
 	/**
@@ -52,12 +52,17 @@ class Intent {
 	}
 
 	public function get_slots() {
-		return get_class_vars( $this->slots );
+		return $this->slots;
 	}
 
 	public function get_slot_names(){
+		return array_keys( $this->slots );
 	}
 
-	public function get_slot_value( $slot_name ) {
+	public function get_slot_value( $name ) {
+		if( ! array_key_exists( $name, $this->slots ) ) {
+			throw new Exception( 'Slot name does not exist in ' . $this->name );
+		}
+		return $this->slots[ $name ]->value;
 	}
 }

@@ -103,8 +103,6 @@ abstract class Skill {
 	public function request() {
 		$this->request = new Request( $this->input() );
 
-		$this->log( $this->request );
-
 		if( ! $this->request->session()->application()->id_equals( $this->application_id ) ) {
 			throw new Exception( 'Wrong Application ID' );
 		}
@@ -136,8 +134,6 @@ abstract class Skill {
 				$response = $this->response_dont_understood();
 				break;
 		}
-
-		$this->log( $response );
 
 		if( $echo ) {
 			$this->output( $response );
@@ -182,8 +178,6 @@ abstract class Skill {
 		}
 
 		$this->input = json_decode( $input );
-
-		$this->log( $this->input );
 
 		return $this->input;
 	}

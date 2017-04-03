@@ -67,7 +67,9 @@ class My_Skill extends Skill {
 
 try {
 	$skill = new My_Skill( 'amzn1.ask.skill.f66f9cb9-c632-42bb-be50-210f1d6164b6' );
-	$skill->request()->intent()->get_slots();
+	$skill->log( $skill->request()->intent()->get_slots() );
+	$skill->log( $skill->request()->intent()->get_slot_names() );
+	$skill->log( $skill->request()->intent()->get_slot_names() );
 	$skill->run();
 } catch ( Exception $exception ) {
 	echo $exception->getMessage();

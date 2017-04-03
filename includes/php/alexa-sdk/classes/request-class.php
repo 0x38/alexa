@@ -83,8 +83,6 @@ class Request {
 	 * @param \stdClass $input_data Input from Alexa JSON String
 	 */
 	public function __construct( \stdClass $input_data ) {
-		$this->log( $input_data );
-
 		$this->request_id = $input_data->request->requestId;
 		$this->type = $input_data->request->type;
 		$this->locale = $input_data->request->locale;
