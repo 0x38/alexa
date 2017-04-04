@@ -102,6 +102,21 @@ class Output_Speech{
 	}
 
 	/**
+	 * Is there any value set in Output_Speech
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public function has_values() {
+		if( empty( $this->type ) && empty( $this->text ) && empty( $this->text ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Getting Object content
 	 *
 	 * @since 1.0.0

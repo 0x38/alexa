@@ -152,6 +152,21 @@ class Card{
 	}
 
 	/**
+	 * Is there any value set in Card
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public function has_values() {
+		if( empty( $this->title ) && empty( $this->content ) && empty( $this->text ) && empty( $this->small_image_url ) && empty( $this->large_image_url ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Getting Object content
 	 *
 	 * @since 1.0.0
