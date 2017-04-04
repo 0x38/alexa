@@ -5,6 +5,7 @@
 
 namespace Alexa_Test;
 
+require_once dirname( dirname( __FILE__ ) ) . '/includes/php/alexa-sdk/traits/singleton-trait.php';
 require_once dirname( dirname( __FILE__ ) ) . '/includes/php/alexa-sdk/traits/logger-trait.php';
 
 require_once dirname( dirname( __FILE__ ) ) . '/includes/php/alexa-sdk/classes/application-class.php';

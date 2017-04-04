@@ -10,35 +10,21 @@ namespace Alexa;
  * @package Alexa
  */
 class Response {
+	use Singleton;
+
 	private $version = '1.0';
 
-	private $speech_type;
+	private $output_speech;
+
+	protected function init() {
+		$this->output_speech = new Output_Speech();
+	}
 
 	/**
-	 * Response constructor.
-	 *
-	 * @param \stdClass $response Response from Alexa JSON String
-	 *
-	 * @since 1.0.0
+	 * @return Output_Speech
 	 */
-	public function __construct() {}
-
-	public function output_speech( $speech_type, $content ) {
-		if( 'text' !== $speech_type && 'ssml' !== $speech_type ) {
-			throw new Exception( sprintf( 'Speech Type %s does not exist', $speech_type ) );
-		}
-
-		if( empty( $content ) ) {
-			throw new Exception( sprintf( 'Content is empty', $speech_type ) );
-		}
-
-		$this->speech_type = $speech_type;
-
-		if( 'text' === $speech_type ) {
-			$this->text = $content;
-		} else {
-			$this->ssml = $content;
-		}
+	public function output_speech() {
+		return $this->output_speech;
 	}
 
 	public function add_session_attribute( $name, $value ) {
