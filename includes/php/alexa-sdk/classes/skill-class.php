@@ -69,7 +69,6 @@ abstract class Skill {
 	 */
 	protected $text_dont_understood = 'I did not understood you.';
 
-
 	/**
 	 * Skill constructor.
 	 *

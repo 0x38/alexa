@@ -52,8 +52,16 @@ class My_Skill extends Skill {
 			'Ich kann nichts trinken und ohne Alkohol tu ich mir das nicht an!',
 			'Ich kann diese Bratze nicht ausstehen!',
 			'Hast Du Lack gesoffen?',
-			'Guck mal da, ein Eichhörnchen!'
+			'Ich brech ins Obst... Nein lass mal!',
+			'Guck mal da, ein Eichhörnchen!',
+			'Ich habe Dich zwar gerne, aber so gerne auch nicht',
+			'Deine Garantiezeit für mich hat sich soeben um einen Monat verkürzt',
+			'Guter Geschmack lässt sich nicht kaufen, meiner auch nicht',
+			'Sieh zu dass Du Land gewinnst!',
+			//'Auch für dich, liebe Anette, mache ich da keinerlei Ausnahme!'
 		);
+
+		// return 'Hast Du Lack gesoffen?';
 
 		$array_key = array_rand( $text, 1 );
 
@@ -67,9 +75,12 @@ class My_Skill extends Skill {
 
 try {
 	$skill = new My_Skill( 'amzn1.ask.skill.f66f9cb9-c632-42bb-be50-210f1d6164b6' );
-	$skill->log( $skill->request()->intent()->get_slots() );
-	$skill->log( $skill->request()->intent()->get_slot_names() );
-	$skill->log( $skill->request()->intent()->get_slot_names() );
+
+	if( $skill->request()->has_intent() ) {
+		$skill->log( $skill->request()->intent()->get_slots() );
+		$skill->log( $skill->request()->intent()->get_slot_names() );
+	}
+
 	$skill->run();
 } catch ( Exception $exception ) {
 	echo $exception->getMessage();

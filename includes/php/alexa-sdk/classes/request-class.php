@@ -139,4 +139,15 @@ class Request {
 	public function intent() {
 		return $this->intent;
 	}
+
+	/**
+	 * Checks if Request has an Intent
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return boolean
+	 */
+	public function has_intent() {
+		return empty( $this->intent ) ? false : true;
+	}
 }
