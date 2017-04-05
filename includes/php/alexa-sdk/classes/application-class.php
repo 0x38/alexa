@@ -11,26 +11,18 @@ namespace Alexa;
  */
 class Application {
 	use Id;
-
-	/**
-	 * Application Data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \stdClass
-	 */
-	protected $application_data;
+	use Raw_Object;
 
 	/**
 	 * Application constructor.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $application_data Application from Alexa JSON String
+	 * @param \stdClass $object Application from Alexa JSON String
 	 */
-	public function __construct( \stdClass $application_data ) {
-		$this->application_data = $application_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		$this->id = $application_data->applicationId;
+		$this->id = $object->applicationId;
 	}
 }

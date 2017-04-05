@@ -10,14 +10,7 @@ namespace Alexa;
  * @package Alexa
  */
 class Context {
-	/**
-	 * Request data from Alexa
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \stdClass
-	 */
-	protected $context_data;
+	Use Raw_Object;
 
 	/**
 	 * System Data
@@ -42,10 +35,10 @@ class Context {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $context_data Input from Alexa JSON String
+	 * @param \stdClass $object Input from Alexa JSON String
 	 */
-	public function __construct( \stdClass $context_data ) {
-		$this->context_data = $context_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 	}
 
 	/**
@@ -59,7 +52,7 @@ class Context {
 	 */
 	public function system() {
 		if( empty( $this->system ) ) {
-			$this->system = new System( $this->context_data->System );
+			$this->system = new System( $this->object->System );
 		}
 
 		return $this->system;
@@ -76,7 +69,7 @@ class Context {
 	 */
 	public function audio_player() {
 		if( empty( $this->audio_player ) ) {
-			$this->audio_player = new System( $this->context_data->AudioPlayer );
+			$this->audio_player = new Audio_Player( $this->object->AudioPlayer );
 		}
 
 		return $this->audio_player;

@@ -10,14 +10,7 @@ namespace Alexa;
  * @package Alexa
  */
 class Input {
-	/**
-	 * Input data from Alexa
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \StdClass
-	 */
-	private $input_data;
+	use Raw_Object;
 
 	/**
 	 * Version
@@ -60,16 +53,12 @@ class Input {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $input_data Input from Alexa JSON String
+	 * @param \stdClass $object Input from Alexa JSON String
 	 */
-	public function __construct( \stdClass $input_data ) {
-		$this->input_data = $input_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		$this->version = $input_data->version;
-
-		if( 'IntentRequest' === $this->type ) {
-			$this->intent = new Intent( $input_data->request->intent );
-		}
+		$this->version = $object->version;
 	}
 
 	/**
@@ -92,7 +81,7 @@ class Input {
 	 */
 	public function session() {
 		if( empty( $this->session ) ) {
-			$this->session = new Session( $this->input_data->session );
+			$this->session = new Session( $this->object->session );
 		}
 
 		return $this->session;
@@ -107,11 +96,11 @@ class Input {
 	 */
 	public function context() {
 		if( empty( $this->context ) ) {
-			if( ! property_exists( $this->input_data, 'context' ) ) {
+			if( ! property_exists( $this->object, 'context' ) ) {
 				return false;
 			}
 
-			$this->context = new Context( $this->input_data->context );
+			$this->context = new Context( $this->object->context );
 		}
 
 		return $this->context;
@@ -126,7 +115,7 @@ class Input {
 	 */
 	public function request() {
 		if( empty( $this->request ) ) {
-			$this->request = new Request( $this->input_data->request );
+			$this->request = new Request( $this->object->request );
 		}
 
 		return $this->request;

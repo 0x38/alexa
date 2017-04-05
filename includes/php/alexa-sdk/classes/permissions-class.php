@@ -10,14 +10,7 @@ namespace Alexa;
  * @package Alexa
  */
 class Permissions {
-	/**
-	 * Permissions Data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \stdClass
-	 */
-	protected $permissions_data;
+	use Raw_Object;
 
 	/**
 	 * Consent token
@@ -33,13 +26,13 @@ class Permissions {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $permission_data Permission data from Alexa JSON String
+	 * @param \stdClass $object Permission data from Alexa JSON String
 	 */
-	public function __construct( \stdClass $permissions_data ) {
-		$this->permissions_data = $permissions_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		if( property_exists( $permissions_data, 'consent_token' ) ) {
-			$this->consent_token = $permissions_data->consent_token;
+		if( property_exists( $object, 'consent_token' ) ) {
+			$this->consent_token = $object->consent_token;
 		}
 	}
 

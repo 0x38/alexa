@@ -11,15 +11,7 @@ namespace Alexa;
  */
 class User {
 	use Id;
-
-	/**
-	 * User Data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \stdClass
-	 */
-	protected $user_data;
+	use Raw_Object;
 
 	/**
 	 * Access token
@@ -44,15 +36,15 @@ class User {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $user_data User Data from Alexa JSON String
+	 * @param \stdClass $object User Data from Alexa JSON String
 	 */
-	public function __construct( \stdClass $user_data ) {
-		$this->user_data = $user_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		$this->id = $user_data->userId;
+		$this->id = $object->userId;
 
-		if( property_exists( $user_data, 'accessToken') ) {
-			$this->access_token = $user_data->accessToken;
+		if( property_exists( $object, 'accessToken') ) {
+			$this->access_token = $object->accessToken;
 		}
 	}
 
@@ -70,10 +62,12 @@ class User {
 	/**
 	 * Are there permissions
 	 *
+	 * @since 1.0.0
+	 *
 	 * @return bool
 	 */
 	public function has_permissions() {
-		if( ! property_exists( $this->user_data, 'permissions ' ) ) {
+		if( ! property_exists( $this->object, 'permissions ' ) ) {
 			return false;
 		}
 
@@ -89,7 +83,7 @@ class User {
 	 */
 	public function permissions() {
 		if( empty( $this->permissions ) ) {
-			$this->permissions = new Permissions( $this->user_data->permissions );
+			$this->permissions = new Permissions( $this->object->permissions );
 		}
 
 		return $this->permissions;

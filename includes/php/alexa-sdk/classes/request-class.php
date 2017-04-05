@@ -10,14 +10,7 @@ namespace Alexa;
  * @package Alexa
  */
 class Request {
-	/**
-	 * Request data from Alexa
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \StdClass
-	 */
-	private $request_data;
+	use Raw_Object;
 
 	/**
 	 * Session Data
@@ -69,15 +62,15 @@ class Request {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $input_data Input from Alexa JSON String
+	 * @param \stdClass $object Input from Alexa JSON String
 	 */
-	public function __construct( \stdClass $request_data ) {
-		$this->request_data = $request_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		$this->request_id = $request_data->requestId;
-		$this->type = $request_data->type;
-		$this->locale = $request_data->locale;
-		$this->timestamp = $request_data->timestamp;
+		$this->request_id = $object->requestId;
+		$this->type = $object->type;
+		$this->locale = $object->locale;
+		$this->timestamp = $object->timestamp;
 	}
 
 	/**
@@ -139,7 +132,7 @@ class Request {
 		}
 
 		if( empty( $this->intent ) ) {
-			$this->intent = new Intent( $this->request_data->intent );
+			$this->intent = new Intent( $this->object->intent );
 		}
 
 		return $this->intent;

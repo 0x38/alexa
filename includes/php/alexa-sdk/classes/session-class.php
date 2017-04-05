@@ -11,15 +11,7 @@ namespace Alexa;
  */
 class Session {
 	use Id;
-
-	/**
-	 * Session Data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var \stdClass
-	 */
-	protected $session_data;
+	use Raw_Object;
 
 	/**
 	 * Is Session new
@@ -62,13 +54,14 @@ class Session {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $session_data Session from Alexa JSON String
+	 * @param \stdClass $object Session from Alexa JSON String
 	 */
-	public function __construct( \stdClass $session_data ) {
-		$this->session_data = $session_data;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
 
-		$this->new = $session_data->new;
-		$this->id = $session_data->sessionId;
+		$this->id = $object->sessionId;
+
+		$this->new = $object->new;
 	}
 
 	/**
@@ -80,8 +73,8 @@ class Session {
 	 */
 	public function get_attributes() {
 		if ( empty( $this->attributes ) ) {
-			if ( property_exists( $this->session_data, 'attributes') ) {
-				$attributes = get_object_vars( $this->session_data->attributes );
+			if ( property_exists( $this->object, 'attributes') ) {
+				$attributes = get_object_vars( $this->object->attributes );
 
 				if( empty( $attributes ) ) {
 					return false;
@@ -124,7 +117,7 @@ class Session {
 	 */
 	public function application() {
 		if( empty( $this->application ) ) {
-			$this->application = new Application( $this->session_data->application );
+			$this->application = new Application( $this->object->application );
 		}
 		return $this->application;
 	}
@@ -138,7 +131,7 @@ class Session {
 	 */
 	public function user() {
 		if( empty( $this->user ) ) {
-			$this->user = new User( $this->session_data->user );
+			$this->user = new User( $this->object->user );
 		}
 
 		return $this->user;

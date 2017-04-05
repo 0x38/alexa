@@ -10,6 +10,7 @@ namespace Alexa;
  * @package Alexa
  */
 class Slot{
+	use Raw_Object;
 
 	/**
 	 * Name of the Slot
@@ -34,11 +35,13 @@ class Slot{
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \stdClass $slot_data Input from Alexa JSON String
+	 * @param \stdClass $object Input from Alexa JSON String
 	 */
-	public function __construct( \stdClass $slot_data ) {
-		$this->name = $slot_data->name;
-		$this->value = $slot_data->value;
+	public function __construct( \stdClass $object ) {
+		$this->object = $object;
+
+		$this->name = $object->name;
+		$this->value = $object->value;
 	}
 
 	/**
