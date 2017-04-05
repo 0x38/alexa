@@ -10,6 +10,8 @@ namespace Alexa;
  * @package Alexa
  */
 class Application {
+	use Id;
+
 	/**
 	 * Application Data
 	 *

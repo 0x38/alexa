@@ -138,7 +138,7 @@ class Session {
 	 */
 	public function user() {
 		if( empty( $this->user ) ) {
-			$this->user = new Application( $this->session_data->user );
+			$this->user = new User( $this->session_data->user );
 		}
 
 		return $this->user;
