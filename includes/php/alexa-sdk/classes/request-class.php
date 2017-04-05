@@ -10,7 +10,14 @@ namespace Alexa;
  * @package Alexa
  */
 class Request {
-	use Logger;
+	/**
+	 * Request data from Alexa
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var \StdClass
+	 */
+	private $request_data;
 
 	/**
 	 * Session Data
@@ -19,7 +26,7 @@ class Request {
 	 *
 	 * @var string
 	 */
-	protected $type;
+	private $type;
 
 	/**
 	 * Request ID
@@ -28,7 +35,16 @@ class Request {
 	 *
 	 * @var string
 	 */
-	protected $request_id;
+	private $request_id;
+
+	/**
+	 * Timestamp
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private $timestamp;
 
 	/**
 	 * Locale
@@ -38,33 +54,6 @@ class Request {
 	 * @var string
 	 */
 	protected $locale;
-
-	/**
-	 * Timestamp
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $timestamp;
-
-	/**
-	 * Version
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $version;
-
-	/**
-	 * Session Data
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var Session
-	 */
-	protected $session;
 
 	/**
 	 * Intent Data
@@ -82,51 +71,57 @@ class Request {
 	 *
 	 * @param \stdClass $input_data Input from Alexa JSON String
 	 */
-	public function __construct( \stdClass $input_data ) {
-		$this->request_id = $input_data->request->requestId;
-		$this->type = $input_data->request->type;
-		$this->locale = $input_data->request->locale;
-		$this->timestamp = $input_data->request->timestamp;
-		$this->version = $input_data->version;
+	public function __construct( \stdClass $request_data ) {
+		$this->request_data = $request_data;
 
-		$this->session = new Session( $input_data->session );
-
-		if( 'IntentRequest' === $this->type ) {
-			$this->intent = new Intent( $input_data->request->intent );
-		}
+		$this->request_id = $request_data->requestId;
+		$this->type = $request_data->type;
+		$this->locale = $request_data->locale;
+		$this->timestamp = $request_data->timestamp;
 	}
 
 	/**
-	 * Get or set Version
+	 * Get Request Type
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Session $session
-	 */
-	public function get_version() {
-		return $this->version;
-	}
-
-	/**
-	 * Get or set Request Type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return Session $session
+	 * @return string $type
 	 */
 	public function get_type() {
 		return $this->type;
 	}
 
 	/**
-	 * Get Session
+	 * Get Request ID
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Session $session
+	 * @return string $request_id
 	 */
-	public function session() {
-		return $this->session;
+	public function get_id() {
+		return $this->request_id;
+	}
+
+	/**
+	 * Get Locale
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string $locale
+	 */
+	public function get_locale() {
+		return $this->locale;
+	}
+
+	/**
+	 * Get Timestamp
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string $timestamp
+	 */
+	public function get_timestamp() {
+		return $this->timestamp;
 	}
 
 	/**
@@ -135,8 +130,18 @@ class Request {
 	 * @since 1.0.0
 	 *
 	 * @return Intent $intent
+	 *
+	 * @throws Exception
 	 */
 	public function intent() {
+		if( 'IntentRequest' !== $this->type ) {
+			throw new Exception( 'Intent is not existing in this request' );
+		}
+
+		if( empty( $this->intent ) ) {
+			$this->intent = new Intent( $this->request_data->intent );
+		}
+
 		return $this->intent;
 	}
 
@@ -148,6 +153,6 @@ class Request {
 	 * @return boolean
 	 */
 	public function has_intent() {
-		return empty( $this->intent ) ? false : true;
+		return 'IntentRequest' === $this->type ? false : true;
 	}
 }

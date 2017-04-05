@@ -86,12 +86,12 @@ abstract class Skill {
 	 * @since 1.0.0
 	 */
 	public function run() {
-		$this->request();
-		$this->response();
+		$this->input();
+		$this->output();
 	}
 
 	/**
-	 * Interpreting data, getting from Alexa
+	 * Getting Data from Alexa
 	 *
 	 * @since 1.0.0
 	 *
@@ -99,8 +99,8 @@ abstract class Skill {
 	 *
 	 * @throws Exception
 	 */
-	public function request() {
-		$this->request = new Request( $this->input() );
+	public function input() {
+		$this->request = new Request( $this->receive() );
 
 		if( ! $this->request->session()->application()->id_equals( $this->application_id ) ) {
 			throw new Exception( 'Wrong Application ID' );
@@ -118,7 +118,7 @@ abstract class Skill {
 	 *
 	 * @return array $response
 	 */
-	public function response( $echo = true ) {
+	public function output( $echo = true ) {
 		switch ( $this->request->get_type() ) {
 			case "LaunchRequest":
 				$response = $this->response_launch();
@@ -135,7 +135,7 @@ abstract class Skill {
 		}
 
 		if( $echo ) {
-			$this->output( $response );
+			$this->send( $response );
 		}
 
 		return $response;
@@ -150,7 +150,7 @@ abstract class Skill {
 	 *
 	 * @return mixed
 	 */
-	private function output( $response ) {
+	private function send( $response ) {
 		$response = json_encode( $response );
 		$size = strlen ( $response );
 
@@ -169,7 +169,7 @@ abstract class Skill {
 	 *
 	 * @throws Exception
 	 */
-	private function input() {
+	private function receive() {
 		$input = file_get_contents( 'php://input' );
 
 		if( empty( $input ) ) {

@@ -11,13 +11,13 @@ namespace Alexa;
  */
 class Application {
 	/**
-	 * Application ID
+	 * Application Data
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var string
+	 * @var \stdClass
 	 */
-	protected $application_id;
+	protected $application_data;
 
 	/**
 	 * Application constructor.
@@ -27,19 +27,8 @@ class Application {
 	 * @param \stdClass $application_data Application from Alexa JSON String
 	 */
 	public function __construct( \stdClass $application_data ) {
-		$this->application_id = $application_data->applicationId;
-	}
+		$this->application_data = $application_data;
 
-	/**
-	 * Comparing string with actual application_id
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $string
-	 *
-	 * @return bool
-	 */
-	public function id_equals( $string ) {
-		return $this->application_id === $string;
+		$this->id = $application_data->applicationId;
 	}
 }

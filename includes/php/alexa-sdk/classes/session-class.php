@@ -10,6 +10,17 @@ namespace Alexa;
  * @package Alexa
  */
 class Session {
+	use Id;
+
+	/**
+	 * Session Data
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var \stdClass
+	 */
+	protected $session_data;
+
 	/**
 	 * Is Session new
 	 *
@@ -17,34 +28,16 @@ class Session {
 	 *
 	 * @var bool
 	 */
-	private $new;
+	protected $new;
 
 	/**
-	 * Session ID
+	 * Attributes array
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private $session_id;
-
-	/**
-	 * User Object
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var User
-	 */
-	private $user;
-
-	/**
-	 * Attributes Object
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var Attributes
-	 */
-	private $attributes;
+	protected $attributes = array();
 
 	/**
 	 * Application Object
@@ -53,7 +46,16 @@ class Session {
 	 *
 	 * @var Application
 	 */
-	private $application;
+	protected $application;
+
+	/**
+	 * User Object
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var User
+	 */
+	protected $user;
 
 	/**
 	 * Session constructor.
@@ -63,11 +65,54 @@ class Session {
 	 * @param \stdClass $session_data Session from Alexa JSON String
 	 */
 	public function __construct( \stdClass $session_data ) {
-		$this->new = $session_data->new;
-		$this->session_id = $session_data->sessionId;
+		$this->session_data = $session_data;
 
-		$this->user = new User( $session_data->user );
-		$this->application = new Application( $session_data->application );
+		$this->new = $session_data->new;
+		$this->id = $session_data->sessionId;
+	}
+
+	/**
+	 * Getting all Attributes
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|bool
+	 */
+	public function get_attributes() {
+		if ( empty( $this->attributes ) ) {
+			if ( property_exists( $this->session_data, 'attributes') ) {
+				$attributes = get_object_vars( $this->session_data->attributes );
+
+				if( empty( $attributes ) ) {
+					return false;
+				}
+
+				$this->attributes = $attributes;
+			}
+		}
+
+		return $this->attributes;
+	}
+
+	/**
+	 * Getting Attribute Value
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $name
+	 *
+	 * @return string $value
+	 */
+	public function get_attribute( $name ) {
+		if ( empty( $this->get_attributes() ) ) {
+			return false;
+		}
+
+		if( ! array_key_exists( $name, $this->attributes ) ) {
+			return false;
+		}
+
+		return $this->attributes;
 	}
 
 	/**
@@ -78,6 +123,9 @@ class Session {
 	 * @return Application $application
 	 */
 	public function application() {
+		if( empty( $this->application ) ) {
+			$this->application = new Application( $this->session_data->application );
+		}
 		return $this->application;
 	}
 
@@ -89,17 +137,10 @@ class Session {
 	 * @return User $user
 	 */
 	public function user() {
-		return $this->user;
-	}
+		if( empty( $this->user ) ) {
+			$this->user = new Application( $this->session_data->user );
+		}
 
-	/**
-	 * Getting Session ID
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string $session_id
-	 */
-	public function get_session_id() {
-		return $this->session_id;
+		return $this->user;
 	}
 }
