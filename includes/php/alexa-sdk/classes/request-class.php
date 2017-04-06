@@ -19,7 +19,7 @@ class Request {
 	 *
 	 * @var string
 	 */
-	private $type;
+	protected $type;
 
 	/**
 	 * Request ID
@@ -28,7 +28,7 @@ class Request {
 	 *
 	 * @var string
 	 */
-	private $request_id;
+	protected $request_id;
 
 	/**
 	 * Timestamp
@@ -37,7 +37,7 @@ class Request {
 	 *
 	 * @var string
 	 */
-	private $timestamp;
+	protected $timestamp;
 
 	/**
 	 * Locale
@@ -146,6 +146,6 @@ class Request {
 	 * @return boolean
 	 */
 	public function has_intent() {
-		return 'IntentRequest' === $this->type ? false : true;
+		return 'IntentRequest' === $this->type ? true : false;
 	}
 }

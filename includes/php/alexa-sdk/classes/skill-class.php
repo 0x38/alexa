@@ -34,15 +34,6 @@ abstract class Skill {
 	private $input;
 
 	/**
-	 * Interpreted input data as Alexa SDK object model
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var Request
-	 */
-	private $request;
-
-	/**
 	 * Text which Alexa says if the skill starts
 	 *
 	 * @since 1.0.0
@@ -95,18 +86,18 @@ abstract class Skill {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Request
+	 * @return Input
 	 *
 	 * @throws Exception
 	 */
 	public function input() {
-		$this->request = new Request( $this->receive() );
+		$this->input = new Input( $this->receive() );
 
-		if( ! $this->request->session()->application()->id_equals( $this->application_id ) ) {
+		if( ! $this->input->session()->application()->id_equals( $this->application_id ) ) {
 			throw new Exception( 'Wrong Application ID' );
 		}
 
-		return $this->request;
+		return $this->input;
 	}
 
 	/**
@@ -119,7 +110,7 @@ abstract class Skill {
 	 * @return array $response
 	 */
 	public function output( $echo = true ) {
-		switch ( $this->request->get_type() ) {
+		switch ( $this->input()->request()->get_type() ) {
 			case "LaunchRequest":
 				$response = $this->response_launch();
 				break;
@@ -127,7 +118,7 @@ abstract class Skill {
 				$response = $this->response_end();
 				break;
 			case "IntentRequest":
-				$response = $this->interact( $this->request()->intent() );
+				$response = $this->interact( $this->input()->request()->intent() );
 				break;
 			default:
 				$response = $this->response_dont_understood();
